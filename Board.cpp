@@ -96,25 +96,19 @@ void Board::connectWithDummyNodes(SquareNode& node){
 
 std::vector<Grid> Board::getNeighborsToUniteWith(int first_index, int second_index, PLAYER_IDENTITY current_player) const {
     std::vector<Grid> neighbors;
-    if (isValidNeighbor(first_index + 1, second_index, current_player))
-    {
-        Grid new_neighbor(first_index + 1, second_index);
-        neighbors.push_back(new_neighbor);
-    }
-    if (isValidNeighbor(first_index - 1, second_index, current_player))
-    {
-        Grid new_neighbor(first_index - 1, second_index);
-        neighbors.push_back(new_neighbor);
-    }
-    if (isValidNeighbor(first_index, second_index + 1, current_player))
-    {
-        Grid new_neighbor(first_index, second_index + 1);
-        neighbors.push_back(new_neighbor);
-    }
-    if (isValidNeighbor(first_index, second_index - 1, current_player))
-    {
-        Grid new_neighbor(first_index, second_index - 1);
-        neighbors.push_back(new_neighbor);
+    // i and j range's is for check diagonals-neighbors too.
+    for (int i = -1; i < 2; i++){
+        for (int j = -1; j < 2; j++)
+        {
+            if (i == 0 && j == 0){ //node is a neighbor with himself
+                continue;
+            }
+            if (isValidNeighbor(first_index + i, second_index + j, current_player))
+            {
+                Grid new_neighbor(first_index + i, second_index + j);
+                neighbors.push_back(new_neighbor);
+            }
+        }
     }
     return neighbors;
 }
