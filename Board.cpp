@@ -9,16 +9,13 @@ bool Board::isValidIndices(int row, int col) const {
     return row >= 0 && row < length && col >= 0 && col < width;
 }
 
-bool Board::isGameFinished(PLAYER_IDENTITY *winner_identity) const {
-    if (winner_identity == nullptr) {return false;}
+bool Board::isGameFinished() const {
     if (dummyNodeLastRow.getRootIndices() == dummyNodeFirstRow.getRootIndices()){
         // player_1 wins
-        *winner_identity = PLAYER_1;
         return true;
     }
     if (dummyNodeLastCol.getRootIndices() == dummyNodeFirstCol.getRootIndices()){
         // player_2 wins
-        *winner_identity = PLAYER_2;
         return true;
     }
     return false;
@@ -46,13 +43,11 @@ void Board::BoardMakeAMove(int first_index, int second_index, PLAYER_IDENTITY cu
     int row = first_index;
     int col = second_index;
     if (!isValidIndices(row, col)) {
-        // throw OutOfRange;
-        return;
+        throw OutOfRange();
     }
     if (!(board_vec[col][row].isNodeEmpty())) {
-        // throw AlreadyTaken;
-        return;
-        }
+        throw AlreadyOccupied();
+    }
     (board_vec[col][row]).setIdentity(current_player);
     connectWithDummyNodes(board_vec[col][row]);
     std::vector<Grid> neighbors_places = getNeighborsToUniteWith(first_index, second_index, current_player);
@@ -206,22 +201,22 @@ void Board::printBoard() const {
         std::cout << std::endl;
     }
     std::cout << std::endl;
-
-    for (int row = 0; row < length; row++){
-        for (int col = 0; col < width; col++){
-            Grid current_grid = (board_vec[col][row]).getRootIndices();
-            if (isDummyNodeIndices(current_grid))
-            {
-               printDummy(current_grid);
-            }
-            else
-            {
-                std::cout << "|" << current_grid.getFirstIndex() << "," << current_grid.getSecondIndex() << "|";
-            }
-
-        }
-        std::cout << std::endl;
-    }
+//
+//    for (int row = 0; row < length; row++){
+//        for (int col = 0; col < width; col++){
+//            Grid current_grid = (board_vec[col][row]).getRootIndices();
+//            if (isDummyNodeIndices(current_grid))
+//            {
+//               printDummy(current_grid);
+//            }
+//            else
+//            {
+//                std::cout << "|" << current_grid.getFirstIndex() << "," << current_grid.getSecondIndex() << "|";
+//            }
+//
+//        }
+//        std::cout << std::endl;
+//    }
     std::cout << std::endl;
 
     std::cout << "-------------------------------------------------" << std::endl;

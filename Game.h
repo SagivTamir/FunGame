@@ -12,14 +12,17 @@
 class Game{
 private:
     PlayerTurn current_player;
-    Board board;
+    Board* board;
     bool is_game_finished;
+    int num_of_success_moves;
 
 public:
     Game(int width, int length);
+    ~Game();
     void PlayerMakeAMove(int first_index, int second_index);
     void printGame() const;
     bool isGameFinished() const;
+    bool isReachedMaxMoves() const;
 
 };
 

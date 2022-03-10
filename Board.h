@@ -8,6 +8,7 @@
 #include <vector>
 #include "PlayerIdentity.h"
 #include "SquareNode.h"
+#include "Exceptions.h"
 
 class Board{
 private:
@@ -34,7 +35,7 @@ public:
     int getLength() const;
     void connectWithDummyNodes(SquareNode& node);
     SquareNode& getDummyNode(Grid& current_grid);
-    bool isGameFinished(PLAYER_IDENTITY* winner_identity) const;
+    bool isGameFinished() const;
     void printDummy(Grid& node_indices) const;
 
 };

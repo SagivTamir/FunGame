@@ -8,25 +8,37 @@
 
 void Game::PlayerMakeAMove(int first_index, int second_index) {
     try{
-        board.BoardMakeAMove(first_index - 1,second_index - 1,current_player.getCurrentPlayerTurn());
+        board->BoardMakeAMove(first_index - 1,second_index - 1,current_player.getCurrentPlayerTurn());
+        printGame();
+        if (board->isGameFinished() || isReachedMaxMoves())
+        {
+            is_game_finished = true;
+            return;
+        }
+        current_player.changePlayerTurn();
+        num_of_success_moves++;
     }
-    catch(...){
-        // add exceptions
+    catch(std::bad_alloc& e){
+        std::cout << "allocation error occurred" << std::endl;
     }
-    printGame();
-    PLAYER_IDENTITY winner = EMPTY;
-    if (board.isGameFinished(&winner))
-    {
-        is_game_finished = true;
-        return;
+    catch(OutOfRange& e){
+        std::cout << "indices are out of range,"
+                     " please choose indices between 1 to " << board->getWidth() << std::endl;
     }
-    current_player.changePlayerTurn();
+    catch(AlreadyOccupied& e){
+        std::cout << "indices are already occupied,"
+                     " please choose another indices" << std::endl;
+    }
 }
 
-Game::Game(int width, int length) : current_player(), board(width, length), is_game_finished(false) {}
+Game::Game(int width, int length) :
+    current_player(),
+    board(new Board(width, length)) ,
+    is_game_finished(false),
+    num_of_success_moves(0) {}
 
 void Game::printGame() const {
-    board.printBoard();
+    board->printBoard();
 }
 
 
@@ -36,4 +48,12 @@ bool Game::isGameFinished() const {
         std::cout << "the winner is player number " << current_player.getCurrentPlayerTurn() << std::endl;
     }
     return is_game_finished;
+}
+
+Game::~Game() {
+    delete board;
+}
+
+bool Game::isReachedMaxMoves() const {
+    return num_of_success_moves == board->getLength() * board->getWidth();
 }
